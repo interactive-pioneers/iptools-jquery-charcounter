@@ -2,34 +2,60 @@
 
   'use strict';
 
-  var pluginName = 'ipCharCounter';
+  var pluginName = 'iptCharCounter';
   var defaults = {
     maxLength: 1000,
+    addModifierClass: true,
     elementModifierClass: 'textarea--with-counter',
+    addWrapper: true,
     wrapperClass: 'textarea-wrapper',
     counterClass: 'textarea-counter',
     warningLimit: 30,
     warningClass: 'textarea-counter--warning'
   };
 
-  function IPCharCounter(element, options) {
+
+  /**
+   * IPTCharCounter
+   * @constructor
+   * @param {object} element - jQuery element
+   * @param {object} options - plugin options
+   */
+  function IPTCharCounter(element, options) {
 
     this.$element = $(element);
     this.settings = $.extend({}, defaults, options);
     this._defaults = defaults;
     this._name = pluginName;
 
-    this.maxChars = parseInt(this.$element.data('max-length'), 10) || this.settings.maxLength;
-    this.$wrapper = this.$element.wrap('<div class="' + this.settings.wrapperClass + '"></div>').parent();
-    this.$counter = $('<div class="' + this.settings.counterClass + '">' + this.maxChars + '</div>').appendTo(this.$wrapper);
-    this.$element.addClass(this.settings.elementModifierClass);
-
-    this.addEventListeners();
+    this.init();
 
   }
 
-  IPCharCounter.prototype = {
+  IPTCharCounter.prototype = {
 
+    init: function() {
+
+      this.maxChars = parseInt(this.$element.data('max-length'), 10) || this.settings.maxLength;
+      this.$counter = $('<div class="' + this.settings.counterClass + '">' + this.maxChars + '</div>');
+      if (this.settings.addWrapper) {
+        this.$wrapper = this.$element.wrap('<div class="' + this.settings.wrapperClass + '"></div>').parent();
+        this.$counter.appendTo(this.$wrapper);
+      } else {
+        this.$element.after(this.$counter);
+      }
+
+      this.$element.addClass(this.settings.elementModifierClass);
+
+      this.addEventListeners();
+
+    },
+
+    /**
+     * handles change event
+     * @param {event} event - jQuery event
+     * @returns {undefined}
+     */
     handleChange: function(event) {
 
       var self = event.data;
@@ -51,6 +77,11 @@
 
     },
 
+    /**
+     * handles change with short delay
+     * @param {event} event - jQuery event
+     * @returns {undefined}
+     */
     handleChangeWithDelay: function(event) {
 
       var self = event.data;
@@ -60,17 +91,24 @@
 
     },
 
+    /**
+     * add event listeners
+     * @returns {undefined}
+     */
     addEventListeners: function() {
 
-      this.$element.on('keyup' + '.' + this._name, null, this, this.handleChange);
-      this.$element.on('paste' + '.' + this._name, null, this, this.handleChangeWithDelay);
+      this.$element.on('keyup' + '.' + this._name + ' ' + 'paste' + '.' + this._name, null, this, this.handleChange);
 
     },
 
+    /**
+     * destroy method
+     * @returns {undefined}
+     */
     destroy: function() {
 
       this.$element.off('keyup' + '.' + this._name + ' ' + 'paste' + '.' + this._name);
-      this.$element.removeData();
+      this.$element.removeData('plugin_' + pluginName);
 
     }
 
@@ -79,7 +117,7 @@
   $.fn[pluginName] = function(options) {
     return this.each(function() {
       if (!$.data(this, 'plugin_' + pluginName)) {
-        $.data(this, 'plugin_' + pluginName, new IPCharCounter(this, options));
+        $.data(this, 'plugin_' + pluginName, new IPTCharCounter(this, options));
       }
     });
   };
