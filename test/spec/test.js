@@ -4,8 +4,9 @@
   describe('iptCharCounter', function() {
 
     var config = {
-      defaultMaxLength: 999,
-      warningLimit: 50
+      defaultMaxLength: 10,
+      warningLimit: 50,
+      warningClass: 'warning'
     };
 
     var pluginName = 'plugin_iptCharCounter';
@@ -28,6 +29,49 @@
 
       it('expected to warning limit to ' + config.warningLimit, function() {
         return expect(object.data(pluginName).settings.warningLimit).to.equal(config.warningLimit);
+      });
+
+    });
+
+    describe('getRemainingChars', function() {
+
+      beforeEach(function() {
+        object = $('textarea').iptCharCounter(config);
+      });
+
+      it('expected to return correct number of remaining chars', function() {
+        var testText = 'test';
+        object.data(pluginName).text = testText;
+        var remaining = object.data(pluginName).maxChars - testText.length;
+        return expect(object.data(pluginName).getRemainingChars()).to.equal(remaining);
+      });
+
+    });
+
+    describe('handleChange', function() {
+
+      beforeEach(function() {
+        object = $('textarea').iptCharCounter(config);
+      });
+
+      it('expected to add warning class', function() {
+        object.data(pluginName).$element.text('Hallo Welt!');
+        setTimeout(function() {
+          return expect(object.data(pluginName).$counter.hasClass(config.warningClass)).to.be.ok;
+        }, 200);
+      });
+
+    });
+
+    describe('destroy', function() {
+
+      beforeEach(function() {
+        object = $('textarea').iptCharCounter(config);
+      });
+
+      it('expected to remove data', function() {
+        object.data(pluginName).destroy();
+        return expect(object.data(pluginName)).to.not.be.ok;
       });
 
     });
