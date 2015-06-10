@@ -4,7 +4,7 @@
 
   var pluginName = 'iptCharCounter';
   var defaults = {
-    maxLength: 1000,
+    defaultMaxLength: 1000,
     addModifierClass: true,
     elementModifierClass: 'textarea--with-counter',
     addWrapper: true,
@@ -36,7 +36,7 @@
 
     init: function() {
 
-      this.maxChars = parseInt(this.$element.data('max-length'), 10) || this.settings.maxLength;
+      this.maxChars = parseInt(this.$element.data('max-length'), 10) || this.settings.defaultMaxLength;
       this.$counter = $('<div class="' + this.settings.counterClass + '">' + this.maxChars + '</div>');
       if (this.settings.addWrapper) {
         this.$wrapper = this.$element.wrap('<div class="' + this.settings.wrapperClass + '"></div>').parent();
