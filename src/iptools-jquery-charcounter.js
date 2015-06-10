@@ -126,7 +126,8 @@
      */
     addEventListeners: function() {
 
-      this.$element.on('keyup' + '.' + this._name + ' ' + 'paste' + '.' + this._name, null, this, this.handleChange);
+      var events = 'change' + '.' + this._name + ' ' + 'keyup' + '.' + this._name + ' ' + 'paste' + '.' + this._name;
+      this.$element.on(events, null, this, this.handleChangeWithDelay);
 
     },
 
@@ -136,7 +137,8 @@
      */
     destroy: function() {
 
-      this.$element.off('keyup' + '.' + this._name + ' ' + 'paste' + '.' + this._name);
+      var events = 'change' + '.' + this._name + ' ' + 'keyup' + '.' + this._name + ' ' + 'paste' + '.' + this._name;
+      this.$element.off(events);
       this.$element.removeData('plugin_' + pluginName);
 
     }
