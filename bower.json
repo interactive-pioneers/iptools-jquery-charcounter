@@ -1,7 +1,7 @@
 {
   "name": "iptools-jquery-charcounter",
   "description": "jQuery textarea character count / limit plugin",
-  "main": "src/iptools-jquery-charcounter.js",
+  "main": "dist/iptools-jquery-charcounter.min.js",
   "version": "0.0.1",
   "license": "GPL-3.0",
   "ignore": [
