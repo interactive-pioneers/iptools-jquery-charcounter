@@ -37,7 +37,9 @@
     init: function() {
 
       this.maxChars = parseInt(this.$element.data('max-length'), 10) || this.settings.defaultMaxLength;
-      this.$counter = $('<div class="' + this.settings.counterClass + '">' + this.maxChars + '</div>');
+      this.text = this.readInput();
+      var remaining = this.getRemainingChars();
+      this.$counter = $('<div class="' + this.settings.counterClass + '">' + remaining + '</div>');
       if (this.settings.addWrapper) {
         this.$wrapper = this.$element.wrap('<div class="' + this.settings.wrapperClass + '"></div>').parent();
         this.$counter.appendTo(this.$wrapper);
@@ -52,6 +54,28 @@
     },
 
     /**
+     * get the current textfield input
+     * @returns {string} text
+     */
+    readInput: function() {
+
+      return this.$element.val();
+
+    },
+
+    /**
+     * get number of remaining characters
+     * @param {string} event - jQuery event
+     * @returns {integer} number of characters left
+     */
+    getRemainingChars: function() {
+
+      var countChars = this.text.length;
+      return (this.maxChars - countChars);
+
+    },
+
+    /**
      * handles change event
      * @param {event} event - jQuery event
      * @returns {undefined}
@@ -60,20 +84,25 @@
 
       var self = event.data;
 
-      var text = self.$element.val();
-      var countChars = text.length;
-      var remaining = self.maxChars - countChars;
-      if (remaining < 0) {
-        remaining = 0;
-        text = text.substr(0, self.maxChars);
-        self.$element.val(text);
+      var text = self.readInput();
+      if (self.text !== text) {
+
+        self.text = text;
+        var remaining = self.getRemainingChars();
+        if (remaining < 0) {
+          remaining = 0;
+          text = text.substr(0, self.maxChars);
+          self.text = text;
+          self.$element.val(text);
+        }
+        if (remaining <= self.settings.warningLimit) {
+          self.$counter.addClass(this.settings.warningClass);
+        } else {
+          self.$counter.removeClass(this.settings.warningClass);
+        }
+        self.$counter.text(remaining);
+
       }
-      if (remaining <= self.settings.warningLimit) {
-        self.$counter.addClass(this.settings.warningClass);
-      } else {
-        self.$counter.removeClass(this.settings.warningClass);
-      }
-      self.$counter.text(remaining);
 
     },
 
