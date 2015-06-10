@@ -14,7 +14,6 @@
     warningClass: 'textarea-counter--warning'
   };
 
-
   /**
    * IPTCharCounter
    * @constructor
