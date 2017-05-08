@@ -7,7 +7,7 @@ Displays the remaining characters and limits input to a maximum length.
 
 ## Requirements
 
-- jQuery (version TBD)
+- jQuery 1.11.3 or greater
 
 ## Example
 
