@@ -51,5 +51,11 @@
     "textarea",
     "maxlength",
     "jquery"
+  ],
+  "files": [
+    "*.md",
+    "LICENSE",
+    "src",
+    "dist"
   ]
 }
